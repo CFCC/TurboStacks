@@ -6,7 +6,7 @@ TurboStacks
 Organization
 ------------
 The top level consists of a list of various directories representing the logical function of the stack.
-For example: `dns`, `lancache`. Within each stack directory is a `docker-compose.yml` which contains
+For example: `resolver`, `lancache`. Within each stack directory is a `docker-compose.yaml` which contains
 the directives needed to compose that stack.
 
 Administration
@@ -20,15 +20,13 @@ docker-compose up -d
 ```
 
 ### Shudown
-If you want to delete the leftover containers, add the `-d` flag.
-
 ```
 cd ${stack_dir}
-docker-compose down [-d]
+docker-compose down
 ```
 
 ### Restart
-You can restart a particular service (as named in the `docker-compose.yml` or all of them by omission.
+You can restart a particular service (as named in the `docker-compose.yaml` or all of them by omission.
 ```
 cd ${stack_dir}
 docker-compose restart [service]
