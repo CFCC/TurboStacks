@@ -1,0 +1,22 @@
+version: '2'
+services:
+  dns:
+    image: lancachenet/lancache-dns:latest
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - ${DNS_BIND_IP}:53:53/udp
+      - ${DNS_BIND_IP}:53:53/tcp
+    volumes:
+      - ./custom.db:/etc/bind/cache/custom.db:ro
+
+  monolithic:
+    image: lancachenet/monolithic:latest
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - ${CACHE_BIND_IP}:80:80/tcp
+      - ${CACHE_BIND_IP}:443:443/tcp
+    volumes:
+      - ${CACHE_ROOT}/cache:/data/cache
+      - ${CACHE_ROOT}/logs:/data/logs

@@ -3,6 +3,7 @@ version: '3.1'
 services:
   unbound:
     image: docker.io/mvance/unbound:latest
+    restart: always
     ports:
       - ${UNBOUND_BIND_ADDRESS}:53:53
       - ${UNBOUND_BIND_ADDRESS}:53:53/udp
