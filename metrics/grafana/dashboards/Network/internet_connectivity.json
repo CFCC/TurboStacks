@@ -20,7 +20,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "7.3.1"
+      "version": "7.3.5"
     },
     {
       "type": "panel",
@@ -65,11 +65,12 @@
   "gnetId": 7587,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1604191220565,
+  "iteration": 1609028888284,
   "links": [],
   "panels": [
     {
       "datasource": "Prometheus",
+      "description": "Percentage of probe successes over the last minute.",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -136,15 +137,15 @@
           "calcs": [
             "last"
           ],
-          "fields": "/^Value$/",
+          "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.1",
+      "pluginVersion": "7.3.5",
       "targets": [
         {
-          "expr": "(sum(quantile_over_time(.5, probe_success{job=\"internet_connectivity__http_2xx\"}[1m])) + sum(quantile_over_time(.5, probe_success{job=\"internet_connectivity__icmp\"}[1m]))) / (count(probe_success{job=\"internet_connectivity__icmp\"}) + count(probe_success{job=\"internet_connectivity__http_2xx\"}))",
+          "expr": "sum(quantile_over_time(.5, probe_success{job=~\"^internet_connectivity.*\"}[1m])) / count(probe_success{job=~\"^internet_connectivity.*\"})",
           "instant": false,
           "interval": "",
           "legendFormat": "",
@@ -207,10 +208,10 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.1",
+      "pluginVersion": "7.3.5",
       "targets": [
         {
-          "expr": "(sum(probe_success{job=\"internet_connectivity__icmp\"}) + sum(probe_success{job=\"internet_connectivity__http_2xx\"})) / (count(probe_success{job=\"internet_connectivity__icmp\"}) + count(probe_success{job=\"internet_connectivity__http_2xx\"}))",
+          "expr": "(sum(probe_success{job=~\"^internet_connectivity.*\", instance=~\"$target\"})) / count(probe_success{job=~\"^internet_connectivity.*\", instance=~\"$target\"}) ",
           "interval": "",
           "legendFormat": "",
           "queryType": "randomWalk",
@@ -219,7 +220,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Global Probe Success Rate",
+      "title": "Probe Success Rate",
       "transformations": [],
       "type": "stat"
     },
@@ -271,10 +272,10 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "7.3.1",
+      "pluginVersion": "7.3.5",
       "targets": [
         {
-          "expr": "avg(probe_duration_seconds{job=\"internet_connectivity__icmp\"})",
+          "expr": "avg(probe_duration_seconds{job=\"internet_connectivity__icmp\", instance=~\"$target\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -282,7 +283,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Global Average Ping Time",
+      "title": "Latest Average Ping Time",
       "transformations": [
         {
           "id": "reduce",
@@ -347,10 +348,10 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "7.3.1",
+      "pluginVersion": "7.3.5",
       "targets": [
         {
-          "expr": "avg(probe_dns_lookup_time_seconds{job=\"internet_connectivity__http_2xx\"})",
+          "expr": "avg(probe_dns_lookup_time_seconds{job=\"internet_connectivity__http_2xx\", instance=~\"$target\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -358,7 +359,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Global Average DNS Resolution Time",
+      "title": "Latest Average DNS Resolution Time",
       "transformations": [
         {
           "id": "reduce",
@@ -391,6 +392,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -425,7 +427,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.1",
+      "pluginVersion": "7.3.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -435,8 +437,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "quantile_over_time(.5, probe_duration_seconds{instance=~\"$target\"}[$interval])",
+          "expr": "quantile_over_time(.5, probe_duration_seconds{job=~\"^internet_connectivity.*\", instance=~\"$target\"}[$interval])",
           "format": "time_series",
+          "hide": false,
           "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "{{ instance }}",
@@ -445,9 +448,20 @@
       ],
       "thresholds": [],
       "timeFrom": null,
-      "timeRegions": [],
+      "timeRegions": [
+        {
+          "colorMode": "background6",
+          "fill": true,
+          "fillColor": "rgba(234, 112, 112, 0.12)",
+          "from": "0:00",
+          "line": false,
+          "lineColor": "rgba(237, 46, 24, 0.60)",
+          "op": "time",
+          "to": "7:00"
+        }
+      ],
       "timeShift": null,
-      "title": "Global Median Probe Duration",
+      "title": "Median Probe Duration",
       "tooltip": {
         "shared": true,
         "sort": 1,
@@ -487,7 +501,8 @@
     },
     {
       "aliasColors": {
-        "Count": "red"
+        "Count": "red",
+        "Value": "red"
       },
       "bars": true,
       "dashLength": 10,
@@ -533,7 +548,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.1",
+      "pluginVersion": "7.3.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -543,7 +558,7 @@
       "steppedLine": true,
       "targets": [
         {
-          "expr": "count(quantile_over_time(.5, probe_duration_seconds{instance=~\"$target\"}[$interval]) >=1 )",
+          "expr": "count(quantile_over_time(.5, probe_duration_seconds{job=~\"^internet_connectivity.*\", instance=~\"$target\"}[$interval]) >=1 )",
           "interval": "",
           "legendFormat": "",
           "queryType": "randomWalk",
@@ -552,9 +567,20 @@
       ],
       "thresholds": [],
       "timeFrom": null,
-      "timeRegions": [],
+      "timeRegions": [
+        {
+          "colorMode": "background6",
+          "fill": true,
+          "fillColor": "rgba(234, 112, 112, 0.12)",
+          "from": "0:00",
+          "line": false,
+          "lineColor": "rgba(237, 46, 24, 0.60)",
+          "op": "time",
+          "to": "07:00"
+        }
+      ],
       "timeShift": null,
-      "title": "Global Slow Probe Count",
+      "title": "Slow Probe Count",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -632,7 +658,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.1",
+      "pluginVersion": "7.3.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -642,7 +668,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "quantile_over_time(.5, probe_duration_seconds{job=\"internet_connectivity__icmp\"}[$interval])",
+          "expr": "quantile_over_time(.5, probe_duration_seconds{job=\"internet_connectivity__icmp\", instance=~\"$target\"}[$interval])",
           "interval": "$interval",
           "legendFormat": "{{ instance }}",
           "refId": "A"
@@ -650,9 +676,20 @@
       ],
       "thresholds": [],
       "timeFrom": null,
-      "timeRegions": [],
+      "timeRegions": [
+        {
+          "colorMode": "background6",
+          "fill": true,
+          "fillColor": "rgba(234, 112, 112, 0.12)",
+          "from": "0:00",
+          "line": false,
+          "lineColor": "rgba(237, 46, 24, 0.60)",
+          "op": "time",
+          "to": "7:00"
+        }
+      ],
       "timeShift": null,
-      "title": "Global Median Ping Time",
+      "title": "Median Ping Time",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -729,7 +766,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.1",
+      "pluginVersion": "7.3.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -739,7 +776,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "quantile_over_time(.5, probe_dns_lookup_time_seconds{job=\"internet_connectivity__http_2xx\"}[$interval])",
+          "expr": "quantile_over_time(.5, probe_dns_lookup_time_seconds{job=\"internet_connectivity__http_2xx\", instance=~\"$target\"}[$interval])",
           "interval": "$interval",
           "legendFormat": "{{ instance }}",
           "refId": "A"
@@ -749,7 +786,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Global Median DNS Resolution Time",
+      "title": "Median DNS Resolution Time",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1747,8 +1784,8 @@
         "auto_min": "15s",
         "current": {
           "selected": false,
-          "text": "2m",
-          "value": "2m"
+          "text": "10m",
+          "value": "10m"
         },
         "error": null,
         "hide": 0,
@@ -1776,7 +1813,7 @@
             "value": "1m"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "2m",
             "value": "2m"
           },
@@ -1786,7 +1823,7 @@
             "value": "5m"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "10m",
             "value": "10m"
           },
@@ -1878,5 +1915,5 @@
   "timezone": "",
   "title": "Internet Connectivity",
   "uid": "xtkCtBkiz",
-  "version": 9
+  "version": 1
 }
