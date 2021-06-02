@@ -1,0 +1,36 @@
+---
+# This is sourced from https://github.com/prometheus/blackbox_exporter/blob/master/blackbox.yml
+# with a couple modifications. Notably, I cannot do IPv6 so shut that off.
+modules:
+  http_2xx:
+    prober: http
+    http:
+      preferred_ip_protocol: ip4
+  http_post_2xx:
+    prober: http
+    http:
+      method: POST
+      preferred_ip_protocol: ip4
+  tcp_connect:
+    prober: tcp
+    tcp:
+      preferred_ip_protocol: ip4
+  pop3s_banner:
+    prober: tcp
+    tcp:
+      query_response:
+        - expect: "^+OK"
+      tls: true
+      tls_config:
+        insecure_skip_verify: false
+      preferred_ip_protocol: ip4
+  ssh_banner:
+    prober: tcp
+    tcp:
+      query_response:
+        - expect: "^SSH-2.0-"
+      preferred_ip_protocol: ip4
+  icmp:
+    prober: icmp
+    icmp:
+      preferred_ip_protocol: ip4

@@ -1,0 +1,41 @@
+---
+version: '2'
+services:
+  prometheus:
+    image: docker.io/bitnami/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - /opt/prometheus:/opt/bitnami/prometheus/data
+      - ./prometheus/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
+    command:
+      - '--web.enable-admin-api'
+      - '--storage.tsdb.retention.time=40d'
+      - '--config.file=/opt/bitnami/prometheus/conf/prometheus.yml'
+    restart: always
+
+  grafana:
+    image: docker.io/grafana/grafana:latest # They do good things with latest
+    ports:
+      - 3000:3000
+    volumes:
+      - /opt/grafana:/var/lib/grafana
+      - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./grafana/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./grafana/dashboards:/etc/dashboards
+    depends_on:
+      - prometheus
+    environment:
+      GF_INSTALL_PLUGINS: 'grafana-piechart-panel'
+    restart: always
+
+  blackbox:
+    # https://github.com/prometheus/blackbox_exporter/blob/master/README.md
+    # https://www.robustperception.io/icmp-pings-with-the-blackbox-exporter
+    image: docker.io/prom/blackbox-exporter:latest # They do good things with latest
+    ports:
+      - 9115:9115
+    command: '--config.file=/config/blackbox.yml'
+    volumes:
+      - ./blackbox/blackbox.yml:/config/blackbox.yml
+    restart: always
