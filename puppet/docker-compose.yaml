@@ -11,8 +11,7 @@ services:
       - USE_PUPPETDB=false
     volumes:
       - /opt/puppet/ssl:/etc/puppetlabs/puppet/ssl
-      - /opt/puppet/code:/etc/puppetlabs/code
-      - ./r10k.yaml:/r10k.yaml:ro
+      - /opt/puppet/code:/etc/puppetlabs/code:ro
       - ./fileserver.conf:/etc/puppetlabs/puppet/fileserver.conf:ro
       - /mnt/PuppetFS:/PuppetFS:ro
     ports:

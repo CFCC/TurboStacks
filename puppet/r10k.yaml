@@ -2,4 +2,4 @@
 sources:
   puppet:
     remote: 'https://github.com/CFCC/TurboPuppet'
-    basedir: '/etc/puppetlabs/code/environments'
+    basedir: '/opt/puppet/code/environments'
