@@ -1,0 +1,10 @@
+---
+version: "2.1"
+services:
+  ntp:
+    image: docker.io/cturra/ntp
+    ports:
+      - 123:123/udp
+    restart: unless-stopped
+    environment:
+      - NTP_SERVERS="1.pool.ntp.org,2.pool.ntp.org"
