@@ -1,0 +1,11 @@
+---
+version: "2.1"
+services:
+  tftp:
+    # The popular images from the hub don't allow creation of files.
+    build: ./build
+    volumes:
+      - /opt/tftpboot:/var/lib/tftpboot
+    ports:
+      - 69:69/udp
+    restart: unless-stopped
