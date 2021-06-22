@@ -10,7 +10,7 @@ services:
       - ./prometheus/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
     command:
       - '--web.enable-admin-api'
-      - '--storage.tsdb.retention.time=40d'
+      - '--storage.tsdb.retention.time=400d'
       - '--config.file=/opt/bitnami/prometheus/conf/prometheus.yml'
     restart: always
     networks:
