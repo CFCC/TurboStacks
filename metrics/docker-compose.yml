@@ -3,8 +3,8 @@ version: '2'
 services:
   prometheus:
     image: docker.io/bitnami/prometheus:latest
-    ports:
-      - 9090:9090
+#    ports:
+#      - 9090:9090
     volumes:
       - /opt/prometheus:/opt/bitnami/prometheus/data
       - ./prometheus/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
@@ -13,11 +13,17 @@ services:
       - '--storage.tsdb.retention.time=40d'
       - '--config.file=/opt/bitnami/prometheus/conf/prometheus.yml'
     restart: always
+    networks:
+      - container-dmz
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.apps.campcomputer.com`)"
 
   grafana:
     image: docker.io/grafana/grafana:latest # They do good things with latest
-    ports:
-      - 3000:3000
+#    ports:
+#      - 3000:3000
     volumes:
       - /opt/grafana:/var/lib/grafana
       - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
@@ -29,14 +35,32 @@ services:
     environment:
       GF_INSTALL_PLUGINS: 'grafana-piechart-panel'
     restart: always
+    networks:
+      - container-dmz
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.apps.campcomputer.com`)"
 
   blackbox:
     # https://github.com/prometheus/blackbox_exporter/blob/master/README.md
     # https://www.robustperception.io/icmp-pings-with-the-blackbox-exporter
     image: docker.io/prom/blackbox-exporter:latest # They do good things with latest
-    ports:
-      - 9115:9115
+#    ports:
+#      - 9115:9115
     command: '--config.file=/config/blackbox.yml'
     volumes:
       - ./blackbox/blackbox.yml:/config/blackbox.yml
     restart: always
+    networks:
+      - container-dmz
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.blackbox.rule=Host(`blackbox.apps.campcomputer.com`)"
+
+networks:
+  backend:
+    external: false
+  container-dmz:
+    external: true

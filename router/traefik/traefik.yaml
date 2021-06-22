@@ -1,0 +1,44 @@
+global:
+  checkNewVersion: true
+
+log:
+  level: "DEBUG"
+  filePath: "/var/log/traefik/log-file.log"
+
+accessLog:
+  filePath: "/var/log/traefik/log-access.log"
+  bufferingSize: 100
+
+api: {}
+#  insecure: true
+
+# https://github.com/traefik/traefik/issues/5672
+#entryPoints:
+#  http:
+#    address: ":80"
+#    http:
+#      redirections:
+#        entryPoint:
+#          to: ':443'
+#          scheme: https
+#  https:
+#    address: ":443"
+#    http:
+#      tls: true
+
+providers:
+  docker:
+    exposedByDefault: false
+    network: container-dmz
+  file:
+    filename: /etc/traefik/dynamic.yaml
+    watch: true
+
+
+#?certificatesResolvers:
+#?  letsencrypt:
+#?    acme:
+#?      email: cohoe.grant@gmail.com
+#?      storage: /certs/acme.json
+#?      httpChallenge:
+#?        entryPoint: external-http
