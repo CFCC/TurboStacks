@@ -59,6 +59,12 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.blackbox.rule=Host(`blackbox.apps.campcomputer.com`)"
 
+  iperf:
+    image: docker.io/networkstatic/iperf3:latest
+    command: '-s'
+    ports:
+      - 5201:5201
+
 networks:
   backend:
     external: false
