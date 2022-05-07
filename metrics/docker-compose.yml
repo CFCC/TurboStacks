@@ -2,11 +2,9 @@
 version: '2'
 services:
   prometheus:
-    image: docker.io/bitnami/prometheus:latest
-#    ports:
-#      - 9090:9090
+    image: docker.io/bitnami/prometheus:2.33.5
     volumes:
-      - /opt/prometheus:/opt/bitnami/prometheus/data
+      - prometheus:/opt/bitnami/prometheus/data
       - ./prometheus/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
     command:
       - '--web.enable-admin-api'
@@ -21,15 +19,13 @@ services:
       - "traefik.http.routers.prometheus.rule=Host(`prometheus.apps.campcomputer.com`)"
 
   grafana:
-    image: docker.io/grafana/grafana:latest # They do good things with latest
-#    ports:
-#      - 3000:3000
+    image: docker.io/grafana/grafana:8.4.4
     volumes:
-      - /opt/grafana:/var/lib/grafana
-      - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
-      - ./grafana/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
-      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
-      - ./grafana/dashboards:/etc/dashboard
+      - grafana:/var/lib/grafana:rw
+      - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
+      - ./grafana/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./grafana/dashboards:/etc/dashboards:ro
     depends_on:
       - prometheus
     environment:
@@ -45,13 +41,13 @@ services:
   blackbox:
     # https://github.com/prometheus/blackbox_exporter/blob/master/README.md
     # https://www.robustperception.io/icmp-pings-with-the-blackbox-exporter
-    image: docker.io/prom/blackbox-exporter:latest # They do good things with latest
-#    ports:
-#      - 9115:9115
+    image: docker.io/prom/blackbox-exporter:v0.20.0
     command: '--config.file=/config/blackbox.yml'
     volumes:
       - ./blackbox/blackbox.yml:/config/blackbox.yml
     restart: always
+    cap_add:
+      - NET_RAW
     networks:
       - container-dmz
       - backend
@@ -64,6 +60,10 @@ services:
     command: '-s'
     ports:
       - 5201:5201
+
+volumes:
+  grafana:
+  prometheus:
 
 networks:
   backend:
