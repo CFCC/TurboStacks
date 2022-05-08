@@ -10,4 +10,5 @@ services:
     volumes:
       - ./unbound.conf:/opt/unbound/etc/unbound/unbound.conf:ro
       - ./adblock.conf:/opt/unbound/etc/unbound/adblock.conf:ro
+      - /var/log/unbound.log:/opt/unbound/etc/unbound/unbound.log:rw
     restart: always
