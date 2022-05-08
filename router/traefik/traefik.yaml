@@ -34,6 +34,9 @@ providers:
     filename: /etc/traefik/dynamic.yaml
     watch: true
 
+serversTransport:
+  # This is needed to avoid validating any internal certificates
+  insecureSkipVerify: true
 
 #?certificatesResolvers:
 #?  letsencrypt:

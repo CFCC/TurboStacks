@@ -10,6 +10,8 @@ services:
       - MEM_LIMIT=1024M #optional
     volumes:
       - /opt/unifi:/config
+    networks:
+      - container-dmz
     ports:
       - ${UNIFI_BIND_IP}:3478:3478/udp
       - ${UNIFI_BIND_IP}:10001:10001/udp
@@ -21,3 +23,13 @@ services:
       - ${UNIFI_BIND_IP}:6789:6789 #optional
       - ${UNIFI_BIND_IP}:5514:5514/udp #optional
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.unifi.rule=Host(`unifi.lab.campcomputer.com`)"
+      - "traefik.http.middlewares.unifi.redirectregex.regex=^http://unifi.lab.campcomputer.com/(.*)"
+      - "traefik.http.middlewares.unifi.redirectregex.replacement=http://unifi.lab.campcomputer.com:8080/$${1}"
+      - "traefik.http.routers.unifi.middlewares=unifi@docker"
+
+networks:
+  container-dmz:
+    external: true
