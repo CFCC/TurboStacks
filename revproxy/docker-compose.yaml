@@ -5,7 +5,7 @@ services:
     image: docker.io/library/nginx:stable
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.revproxy.rule=Host(`photos.campcomputer.com`,`photos.lab.campcomputer.com`,`photos.apps.campcomputer.com`)"
+      - "traefik.http.routers.revproxy.rule=Host(`photos.campcomputer.com`,`photos.apps.campcomputer.com`)"
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
     networks:

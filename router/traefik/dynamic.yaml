@@ -1,0 +1,9 @@
+tls:
+  options:
+    default:
+      maxVersion: VersionTLS13
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /run/secrets/wildcard_cert
+        keyFile: /run/secrets/wildcard_key
