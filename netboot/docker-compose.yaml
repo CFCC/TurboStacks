@@ -6,6 +6,8 @@ services:
     build: ./build
     volumes:
       - /opt/tftpboot:/var/lib/tftpboot
-    ports:
-      - 69:69/udp
+    network_mode: host
+    #ports:
+    #  - 69:69/udp
     restart: unless-stopped
+
