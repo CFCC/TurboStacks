@@ -10,6 +10,7 @@ services:
       - 69:69/udp
     volumes:
       - config:/config:rw
+      - /opt/CampFitch/TurboPXE:/config/menus/local:rw
       - assets:/assets:rw
     networks:
       - container-dmz
@@ -21,6 +22,15 @@ services:
       - "traefik.http.routers.netbootassets.rule=Host(`netboot-assets.apps.campcomputer.com`)"
       - "traefik.http.routers.netbootassets.service=netbootassets"
       - "traefik.http.services.netbootassets.loadbalancer.server.port=80"
+    depends_on:
+      init-netbootxyz:
+        condition: service_completed_successfully
+  init-netbootxyz:
+    image: ghcr.io/netbootxyz/netbootxyz
+    command: find /config/menus/local/ \( -name "*.ipxe" -or -name "*.cfg" \) -exec echo "Installing {}." \; -exec cp -f {} /config/menus/ \;
+    volumes:
+      - config:/config:rw
+      - /opt/CampFitch/TurboPXE:/config/menus/local:rw
 volumes:
   assets:
   config:
