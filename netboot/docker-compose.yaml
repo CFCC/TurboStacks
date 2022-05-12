@@ -1,13 +1,29 @@
 ---
-version: "2.1"
+version: "3.1"
 services:
-  tftp:
-    # The popular images from the hub don't allow creation of files.
-    build: ./build
-    volumes:
-      - /opt/tftpboot:/var/lib/tftpboot
-    network_mode: host
-    #ports:
-    #  - 69:69/udp
+  netbootxyz:
+    image: ghcr.io/netbootxyz/netbootxyz
     restart: unless-stopped
-
+    environment:
+      - MENU_VERSION=2.0.58
+    ports:
+      - 69:69/udp
+    volumes:
+      - config:/config:rw
+      - assets:/assets:rw
+    networks:
+      - container-dmz
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.netboot.rule=Host(`netboot.apps.campcomputer.com`)"
+      - "traefik.http.routers.netboot.service=netboot"
+      - "traefik.http.services.netboot.loadbalancer.server.port=3000"
+      - "traefik.http.routers.netbootassets.rule=Host(`netboot-assets.apps.campcomputer.com`)"
+      - "traefik.http.routers.netbootassets.service=netbootassets"
+      - "traefik.http.services.netbootassets.loadbalancer.server.port=80"
+volumes:
+  assets:
+  config:
+networks:
+  container-dmz:
+    external: true
