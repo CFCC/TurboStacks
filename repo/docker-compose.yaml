@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  nexus:
+    image: docker.io/sonatype/nexus3
+    volumes:
+      - "nexus-data:/nexus-data"
+    #ports:
+    #  - "8081:8081"
+    restart: unless-stopped
+    networks:
+      - container-dmz
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nexus.rule=Host(`nexus.apps.campcomputer.com`)"
+      - "traefik.http.services.nexus.loadbalancer.server.port=8081"
+  
+volumes:
+  nexus-data:
+
+networks:
+  container-dmz:
+    external: true
