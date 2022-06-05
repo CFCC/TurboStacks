@@ -25,10 +25,12 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.unifi.rule=Host(`unifi.lab.campcomputer.com`)"
-      - "traefik.http.middlewares.unifi.redirectregex.regex=^http://unifi.lab.campcomputer.com/(.*)"
-      - "traefik.http.middlewares.unifi.redirectregex.replacement=http://unifi.lab.campcomputer.com:8080/$${1}"
-      - "traefik.http.routers.unifi.middlewares=unifi@docker"
+      - "traefik.http.routers.unifi.rule=Host(`unifi.lab.campcomputer.com`,`unifi.apps.campcomputer.com`)"
+      - "traefik.http.services.unifi.loadbalancer.server.port=8443"
+      - "traefik.http.services.unifi.loadbalancer.server.scheme=https"
+      #- "traefik.http.middlewares.unifi.redirectregex.regex=^http://unifi.lab.campcomputer.com/(.*)"
+      #- "traefik.http.middlewares.unifi.redirectregex.replacement=http://unifi.lab.campcomputer.com:8080/$${1}"
+      #- "traefik.http.routers.unifi.middlewares=unifi@docker"
 
 networks:
   container-dmz:
