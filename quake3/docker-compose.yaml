@@ -1,0 +1,10 @@
+services:
+  quake3:
+    image: docker.io/vkryvoruchko/quake3
+    restart: always
+    network_mode: host
+    #ports:
+    #  - "27960:27960/udp"
+    volumes:
+      - /opt/CampFitch/Quake3/baseq3:/usr/share/games/quake3/baseq3
+      - ./server.cfg:/usr/share/games/quake3/baseq3/server.cfg
