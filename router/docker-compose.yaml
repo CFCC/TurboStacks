@@ -20,6 +20,8 @@ services:
     secrets:
       - wildcard_cert
       - wildcard_key
+      - photos_cert
+      - photos_key
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`traefik.apps.campcomputer.com`)"
@@ -36,3 +38,7 @@ secrets:
     file: /opt/CampFitch/secrets/wildcard_cert
   wildcard_key:
     file: /opt/CampFitch/secrets/wildcard_key
+  photos_cert:
+    file: /opt/CampFitch/secrets/photos_cert
+  photos_key:
+    file: /opt/CampFitch/secrets/photos_key
