@@ -32,7 +32,3 @@ services:
       #- "traefik.http.middlewares.unifi.redirectregex.regex=^http://unifi.lab.campcomputer.com/(.*)"
       #- "traefik.http.middlewares.unifi.redirectregex.replacement=http://unifi.lab.campcomputer.com:8080/$${1}"
       #- "traefik.http.routers.unifi.middlewares=unifi@docker"
-
-networks:
-  container-dmz:
-    external: true
