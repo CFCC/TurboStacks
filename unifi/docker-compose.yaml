@@ -7,7 +7,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - MEM_LIMIT=1024M #optional
+      #- MEM_LIMIT=1024M #optional
     volumes:
       - /opt/unifi:/config
     network_mode: host

@@ -71,6 +71,15 @@ services:
     volumes:
       - '/:/host:ro,rslave'
 
+  speedtest:
+    image: docker.io/linuxserver/librespeed:latest
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.speedtest.rule=Host(`speedtest.apps.campcomputer.com`)"
+    networks:
+      - container-dmz
+
 volumes:
   grafana:
   prometheus:

@@ -7,6 +7,6 @@ tls:
       defaultCertificate:
         certFile: /run/secrets/wildcard_cert
         keyFile: /run/secrets/wildcard_key
-  certificates:
-    - certFile: /run/secrets/photos_cert
-      keyFile: /run/secrets/photos_key
+#  certificates:
+#    - certFile: /run/secrets/photos_cert
+#      keyFile: /run/secrets/photos_key

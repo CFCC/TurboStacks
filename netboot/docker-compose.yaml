@@ -29,10 +29,11 @@ services:
         condition: service_completed_successfully
   init-netbootxyz:
     image: ghcr.io/netbootxyz/netbootxyz
-    command: find /config/menus/local/ \( -name "*.ipxe" -or -name "*.cfg" \) -exec echo "Installing {}." \; -exec cp -f {} /config/menus/ \;
+    command: find /localmenus \( -name "*.ipxe" -or -name "*.cfg" \) -exec echo "Installing {}." \; -exec cp -f {} /config/menus/ \;
     volumes:
       - config:/config:rw
-      - /opt/CampFitch/TurboPXE:/config/menus/local:rw
+      #- /opt/CampFitch/TurboPXE:/config/menus/local:rw
+      - /opt/CampFitch/TurboPXE:/localmenus:ro
 volumes:
   assets:
   config:
