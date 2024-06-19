@@ -8,12 +8,13 @@ services:
       - /opt/CampFitch/Quake3/baseq3:/usr/share/games/quake3/baseq3
       - ./quake3/server.cfg:/usr/share/games/quake3/baseq3/server.cfg
 
-#?  tf2:
-#?    image: docker.io/cm2network/tf2
-#?    restart: always
-#?    # host requires firewall-cmd
-#?    network_mode: host
-#?    volumes:
-#?      - /opt/CampFitch/tf2:/home/steam/tf-dedicated:rw
-#?    env_file:
-#?      - /opt/CampFitch/secrets/games
+  tf2:
+    image: docker.io/cm2network/tf2:latest-x64
+    restart: always
+    # host requires firewall-cmd
+    network_mode: host
+    volumes:
+      - /opt/CampFitch/tf2:/home/steam/tf-dedicated:rw
+      # /opt/CampFitch/tf2/tf/cfg/server.cfg
+    env_file:
+      - /opt/CampFitch/secrets/games
