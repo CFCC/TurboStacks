@@ -7,6 +7,8 @@ services:
     ports:
       - ${DNS_BIND_IP}:53:53/udp
       - ${DNS_BIND_IP}:53:53/tcp
+    volumes:
+      - /opt/logs/lancache_dns:/var/log/named:rw
 
   monolithic:
     image: lancachenet/monolithic:latest
@@ -17,4 +19,4 @@ services:
       - ${CACHE_BIND_IP}:443:443/tcp
     volumes:
       - ${CACHE_ROOT}/cache:/data/cache
-      - ${CACHE_ROOT}/logs:/data/logs
+      - /opt/logs/lancache_monolithic:/data/logs:rw
