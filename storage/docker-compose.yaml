@@ -8,8 +8,8 @@ services:
       - /mnt:/data:ro
       - ./nginx:/etc/nginx/conf.d:ro
     ports:
-      - 10.0.0.163:80:80
-      - 10.0.0.163:443:443
+      - 10.0.0.175:80:80
+      - 10.0.0.175:443:443
     networks:
       - container-dmz
     secrets:
