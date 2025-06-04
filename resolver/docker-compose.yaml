@@ -1,8 +1,7 @@
 ---
-version: '3.1'
 services:
   unbound:
-    image: docker.io/mvance/unbound:latest
+    image: docker.io/mvance/unbound:1.12.0
     restart: always
     ports:
       - ${UNBOUND_BIND_ADDRESS}:53:53
@@ -11,5 +10,4 @@ services:
       - ./unbound.conf:/opt/unbound/etc/unbound/unbound.conf:ro
       - ./local.conf:/opt/unbound/etc/unbound/local.conf:ro
       - ./adblock.conf:/opt/unbound/etc/unbound/adblock.conf:ro
-      - /var/log/unbound.log:/opt/unbound/etc/unbound/unbound.log:rw
-    restart: always
+      - /opt/logs/resolver_unbound/unbound.log:/opt/unbound/etc/unbound/unbound.log:rw

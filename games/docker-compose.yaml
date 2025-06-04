@@ -16,5 +16,6 @@ services:
     volumes:
       - /opt/CampFitch/tf2:/home/steam/tf-dedicated:rw
       # /opt/CampFitch/tf2/tf/cfg/server.cfg
+      - /opt/logs/games_tf2:/home/steam/Steam/logs:rw
     env_file:
       - /opt/CampFitch/secrets/games

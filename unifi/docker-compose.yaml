@@ -1,8 +1,7 @@
 ---
-version: "2.1"
 services:
   controller:
-    image: ghcr.io/linuxserver/unifi-controller
+    image: ghcr.io/linuxserver/unifi-controller:latest
     #container_name: unifi-controller
     environment:
       - PUID=1000
@@ -11,18 +10,6 @@ services:
     volumes:
       - /opt/unifi:/config
     network_mode: host
-#    networks:
-#      - container-dmz
-#    ports:
-#      - ${UNIFI_BIND_IP}:3478:3478/udp
-#      - ${UNIFI_BIND_IP}:10001:10001/udp
-#      - ${UNIFI_BIND_IP}:8080:8080
-#      - ${UNIFI_BIND_IP}:8443:8443
-#      - ${UNIFI_BIND_IP}:1900:1900/udp #optional
-#      - ${UNIFI_BIND_IP}:8843:8843 #optional
-#      - ${UNIFI_BIND_IP}:8880:8880 #optional
-#      - ${UNIFI_BIND_IP}:6789:6789 #optional
-#      - ${UNIFI_BIND_IP}:5514:5514/udp #optional
     restart: unless-stopped
     labels:
       - "traefik.enable=true"

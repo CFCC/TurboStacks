@@ -1,5 +1,0 @@
----
-sources:
-  puppet:
-    remote: 'https://github.com/CFCC/TurboPuppet'
-    basedir: '/opt/puppet/code/environments'
