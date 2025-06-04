@@ -11,3 +11,18 @@ services:
       - ./local.conf:/opt/unbound/etc/unbound/local.conf:ro
       - ./adblock.conf:/opt/unbound/etc/unbound/adblock.conf:ro
       - /opt/logs/resolver_unbound/unbound.log:/opt/unbound/etc/unbound/unbound.log:rw
+    secrets:
+      - unbound_server_key
+      - unbound_server_pem
+      - unbound_control_key
+      - unbound_control_pem
+
+secrets:
+  unbound_server_pem:
+    file: /opt/CampFitch/secrets/unbound_server.pem
+  unbound_server_key:
+    file: /opt/CampFitch/secrets/unbound_server.key
+  unbound_control_pem:
+    file: /opt/CampFitch/secrets/unbound_control.pem
+  unbound_control_key:
+    file: /opt/CampFitch/secrets/unbound_control.key
