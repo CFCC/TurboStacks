@@ -8,6 +8,7 @@ services:
       - ${DNS_BIND_IP}:53:53/tcp
     volumes:
       - /opt/logs/lancache_dns:/var/log/named:rw
+      - ./named.conf.options:/etc/bind/named.conf.options:rw
 
   monolithic:
     image: lancachenet/monolithic:latest
