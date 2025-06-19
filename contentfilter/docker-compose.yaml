@@ -1,0 +1,24 @@
+---
+services:
+  web:
+    image: docker.io/library/nginx:stable
+    restart: unless-stopped
+    volumes:
+      - ./nginx:/etc/nginx/conf.d:ro
+      - ./content:/app:ro
+    ports:
+      - 10.0.0.8:80:80
+      - 10.0.0.8:443:443
+    networks:
+      - container-dmz
+    secrets:
+      - wildcard_cert
+      - wildcard_key
+networks:
+  container-dmz:
+    external: true
+secrets:
+  wildcard_cert:
+    file: /opt/CampFitch/secrets/wildcard_cert
+  wildcard_key:
+    file: /opt/CampFitch/secrets/wildcard_key
