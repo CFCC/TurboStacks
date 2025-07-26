@@ -19,3 +19,52 @@ services:
       - /opt/logs/games_tf2:/home/steam/Steam/logs:rw
     env_file:
       - /opt/CampFitch/secrets/games
+
+  # Minecraft server (vanilla)
+  mc:
+    image: itzg/minecraft-server:latest
+    networks:
+      - minecraft
+    ports:
+      - 8912:25565
+    environment:
+      - EULA=TRUE
+      - VERSION=1.21.5
+    volumes:
+      - /home/vince/Code/minecraft/worlds/1-mc:/data
+    restart: unless-stopped
+
+  # Minecraft Hardcore server
+  minecraft:
+    image: docker.io/itzg/minecraft-server:latest
+    networks:
+      - minecraft
+    environment:
+      - EULA=TRUE
+      - VERSION=1.21.1
+    volumes:
+      - /home/vince/Code/minecraft/worlds/2-mchc:/data
+    restart: unless-stopped
+
+  # Minecraft router (multiplexes mc and mchc)
+  router:
+    image: itzg/mc-router:latest
+    depends_on:
+      - mc
+      - mchc
+    networks:
+      - minecraft
+      - container-dmz
+    ports:
+      - 25565:25565  # Port for Minecraft gameplay traffic
+    environment:
+      MAPPING: |
+        mc.apps.halfblake.com=mc:25565
+        mchc.apps.halfblake.com=mchc:25565
+    labels:
+      traefik.enable: true
+      # Define HTTP routing for Traefik
+      traefik.http.routers.minecraft.rule: HostRegexp(`{host:.+}`)
+      traefik.http.routers.minecraft.entrypoints: websecure
+      traefik.http.routers.minecraft.tls.certresolver: letsencrypt
+      traefik.http.services.minecraft.loadbalancer.server.port: 25565

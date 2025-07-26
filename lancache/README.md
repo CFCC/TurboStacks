@@ -7,4 +7,5 @@ Cache Flush
 -----------
 ```
 docker compose exec dns rndc flushname www.bing.com
+docker compose exec dns rndc flush
 ```
