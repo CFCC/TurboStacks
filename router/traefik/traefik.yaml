@@ -3,10 +3,12 @@ global:
 
 log:
   level: "DEBUG"
-  filePath: "/var/log/traefik/log-file.log"
+  #filePath: "/var/log/traefik/log-file.log"
+  filePath: ""
 
 accessLog:
-  filePath: "/var/log/traefik/log-access.log"
+  #filePath: "/var/log/traefik/log-access.log"
+  filePath: ""
   bufferingSize: 100
 
 api: {}
@@ -37,10 +39,27 @@ serversTransport:
   # This is needed to avoid validating any internal certificates
   insecureSkipVerify: true
 
-#?certificatesResolvers:
-#?  letsencrypt:
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: cohoe.grant@gmail.com
+      storage: /certs/acme.json
+#      httpChallenge:
+#        entryPoint: external-http
+      dnsChallenge:
+        provider: namecheap
+        resolvers:
+          - "156.154.132.200:53" # dns1.registrar-servers.com.
+          - "156.154.133.200:53" # dns2.registrar-servers.com.
+          - "8.8.8.8:53" # dns.google.
+        delayBeforeCheck: 10
+#?  campcertresolver:
 #?    acme:
 #?      email: cohoe.grant@gmail.com
-#?      storage: /certs/acme.json
-#?      httpChallenge:
-#?        entryPoint: external-http
+#?      storage: /certs/camp.json
+#?      dnsChallenge:
+#?        provider: namecheap
+#?        resolvers:
+#?          - "156.154.132.200:53" # dns1.registrar-servers.com.
+#?          - "156.154.133.200:53" # dns2.registrar-servers.com.
+#?          - "8.8.8.8:53" # dns.google.

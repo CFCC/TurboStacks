@@ -14,9 +14,9 @@ options {
 		response-policy { zone "rpz"; };
 		rrset-order { order cyclic; };
         forwarders {
-            #10.0.0.1;
+            10.0.0.1;
             #192.168.0.1 at camp?
-            192.168.0.1;
+            #192.168.0.1;
             #8.8.8.8;
             #8.8.4.4;
             #1.1.1.1;
