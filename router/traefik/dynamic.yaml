@@ -2,21 +2,17 @@ tls:
   options:
     default:
       maxVersion: VersionTLS13
-#  stores:
-#    default:
-#      defaultCertificate:
-#        certFile: /run/secrets/wildcard_cert
-#        keyFile: /run/secrets/wildcard_key
-#  certificates:
-#    - certFile: /run/secrets/photos_cert
-#      keyFile: /run/secrets/photos_key
-
+  stores:
+    default:
+      defaultGeneratedCert:
+        resolver: namecheap
+        domain:
+          main: apps.campcomputer.com
+          sans:
+            - "*.apps.campcomputer.com"
+            - "*.lab.campcomputer.com"
 http:
   routers:
-    api:
-      rule: Host(`traefik.apps.campcomputer.com`)
+    dashboard:
+      rule: Host(`traefik.apps.campcomputer.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
       service: api@internal
-      tls:
-        certresolver: letsencrypt
-        domains:
-          - main: "*.apps.campcomputer.com"
