@@ -1,0 +1,9 @@
+# Sync job configuration for immich-shared-library
+
+sync_jobs:
+  - name: "director-to-camper-sync"
+    source_user_id: "5631ec2d-bfb1-43fc-aa2d-a8eec4e8954e"
+    target_user_id: "dbd72233-cada-4f8f-8220-ae590aa2291d"
+    target_library_id: "d2d5a15b-2b5c-4d8c-8d41-dd221450fee8"
+    source_path_prefix: "/mnt/Photos-External/"
+    target_path_prefix: "/mnt/Photos-Shared/"
