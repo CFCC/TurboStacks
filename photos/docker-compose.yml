@@ -30,8 +30,6 @@ services:
     restart: always
     healthcheck:
       disable: false
-    ports:
-      - 2283:2283
     networks:
       - container-dmz
       - backend

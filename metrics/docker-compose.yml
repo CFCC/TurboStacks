@@ -1,5 +1,4 @@
 ---
-version: '2'
 services:
   prometheus:
     image: docker.io/bitnami/prometheus:2.33.5
