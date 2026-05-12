@@ -4,8 +4,10 @@ services:
     image: ghcr.io/netbootxyz/netbootxyz
     restart: unless-stopped
     environment:
-      - MENU_VERSION=2.0.58
-      - TFTPD_OPTS=--create
+      - PUID=1001
+      - PGID=1001
+      #- MENU_VERSION=2.0.58
+      #- TFTPD_OPTS=--create
     ports:
       - 69:69/udp
     volumes:
