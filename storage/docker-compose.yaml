@@ -1,5 +1,18 @@
 ---
 services:
+  samba:
+    image: docker.io/dockurr/samba
+    container_name: storage-samba
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./smb.conf:/etc/samba/smb.conf:ro
+      - ./samba/users.conf:/etc/samba/users.conf:ro
+      - samba-data:/var/lib/samba
+      - /mnt:/mnt:rw
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+
   web:
     image: docker.io/library/nginx:stable
     restart: unless-stopped
@@ -17,6 +30,8 @@ services:
 networks:
   container-dmz:
     external: true
+volumes:
+  samba-data:
 secrets:
   wildcard_cert:
     file: /opt/CampFitch/secrets/wildcard_cert
