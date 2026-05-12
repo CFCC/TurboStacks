@@ -3,8 +3,8 @@ services:
   traefik:
     image: docker.io/library/traefik:v3.7
     ports:
-      - ${ROUTER_BIND_ADDRESS}:80:80
-      - ${ROUTER_BIND_ADDRESS}:443:443
+      - 10.0.0.10:80:80
+      - 10.0.0.10:443:443
     volumes:
       - ./traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock
@@ -14,7 +14,7 @@ services:
       - container-dmz
     restart: always
     extra_hosts:
-      - 'host.docker.internal:172.17.0.1'
+      - "host.docker.internal:172.17.0.1"
     env_file:
       - /opt/CampFitch/secrets/router.env
 
