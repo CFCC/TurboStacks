@@ -15,7 +15,7 @@ services:
     volumes:
       - /mnt/Photos/Upload:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
-      - /mnt/Photos/Photos:/mnt/Photos-External:ro
+      - /mnt/Photos/Photos:/mnt/Photos-External:rw
       - /mnt/Photos/Photos:/mnt/Photos-Shared:ro
     env_file:
       - /opt/CampFitch/secrets/immich.env
