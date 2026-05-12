@@ -1,22 +1,28 @@
 services:
   dns:
     image: lancachenet/lancache-dns:latest
-    env_file: .env
+    environment:
+      LANCACHE_IP: 10.0.0.9
+      USE_GENERIC_CACHE: "true"
     restart: unless-stopped
     ports:
-      - ${DNS_BIND_IP}:53:53/udp
-      - ${DNS_BIND_IP}:53:53/tcp
+      - 10.0.0.10:53:53/udp
+      - 10.0.0.10:53:53/tcp
     volumes:
       - /opt/logs/lancache_dns:/var/log/named:rw
       - ./named.conf.options:/etc/bind/named.conf.options:rw
 
   monolithic:
     image: lancachenet/monolithic:latest
-    env_file: .env
+    environment:
+      LANCACHE_IP: 10.0.0.9
+      USE_GENERIC_CACHE: "true"
+      CACHE_DISK_SIZE: 700g
+      CACHE_MAX_AGE: 90d
     restart: unless-stopped
     ports:
-      - ${CACHE_BIND_IP}:80:80/tcp
-      - ${CACHE_BIND_IP}:443:443/tcp
+      - 10.0.0.9:80:80/tcp
+      - 10.0.0.9:443:443/tcp
     volumes:
-      - ${CACHE_ROOT}/cache:/data/cache
+      - /mnt/Cache/cache:/data/cache
       - /opt/logs/lancache_monolithic:/data/logs:rw
