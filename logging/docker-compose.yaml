@@ -1,18 +1,31 @@
 ---
 services:
-  logs:
-    image: docker.io/amir20/dozzle:latest
+  dockhand:
+    image: docker.io/fnsys/dockhand:v1.0.28
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - dockhand:/app/data:rw
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dozzle.rule=Host(`logs.apps.campcomputer.com`)"
+      - "traefik.http.routers.dockhand.rule=Host(`dockhand.apps.campcomputer.com`)"
     networks:
       - container-dmz
+#  logs:
+#    image: docker.io/amir20/dozzle:latest
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    restart: always
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.dozzle.rule=Host(`logs.apps.campcomputer.com`)"
+#    networks:
+#      - container-dmz
 
 networks:
   backend:
   container-dmz:
     external: true
 
+volumes:
+  dockhand:
