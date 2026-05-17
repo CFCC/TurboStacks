@@ -1,0 +1,93 @@
+---
+volumes:
+  fleet_mysql:
+    external: true
+  redis:
+  fleet_data:
+    external: true
+  logs:
+  vulndb:
+
+services:
+  mysql:
+    image: mysql:8
+    env_file:
+      - /opt/CampFitch/secrets/mdm.env
+    volumes:
+      - fleet_mysql:/var/lib/mysql
+    cap_add:
+      - SYS_NICE
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    # ports:
+    #   - "127.0.0.1:3306:3306"
+    restart: unless-stopped
+
+  redis:
+    image: redis:6
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    # ports:
+    #   - "127.0.0.1:6379:6379"
+    restart: unless-stopped
+
+  fleet-init:
+    image: alpine:latest
+    volumes:
+      - logs:/logs
+      - fleet_data:/data
+      - vulndb:/vulndb
+    command: sh -c "chown -R 100:101 /logs /data /vulndb"
+
+  fleet:
+    image: fleetdm/fleet:v4.85.0
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      fleet-init:
+        condition: service_completed_successfully
+    command: sh -c "/usr/bin/fleet prepare db --no-prompt && /usr/bin/fleet serve"
+    env_file:
+      - /opt/CampFitch/secrets/mdm.env
+    environment:
+      - FLEET_REDIS_ADDRESS=redis:6379
+      - FLEET_MYSQL_ADDRESS=mysql:3306
+    # ports:
+    #   - "127.0.0.1:1337:1337"
+    volumes:
+      - fleet_data:/fleet
+      - logs:/logs
+      - vulndb:/vulndb
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:1337/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    networks:
+      - default
+      - container-dmz
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fleet.rule=Host(`fleet.apps.campcomputer.com`)"
+      - "traefik.http.routers.fleet.tls.certresolver=namecheap"
+      - "traefik.http.services.fleet.loadbalancer.server.port=1337"
+
+networks:
+  container-dmz:
+    external: true
