@@ -57,6 +57,7 @@ services:
   iperf:
     image: docker.io/networkstatic/iperf3:latest
     command: '-s'
+    restart: always
     ports:
       - 5201:5201
 
