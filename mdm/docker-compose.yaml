@@ -11,6 +11,8 @@ volumes:
 services:
   mysql:
     image: mysql:8
+    networks:
+      - backend
     env_file:
       - /opt/CampFitch/secrets/mdm.env
     volumes:
@@ -32,6 +34,8 @@ services:
 
   redis:
     image: redis:6
+    networks:
+      - backend
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - redis:/data
@@ -46,6 +50,8 @@ services:
 
   fleet-init:
     image: alpine:latest
+    networks:
+      - backend
     volumes:
       - logs:/logs
       - fleet_data:/data
@@ -80,7 +86,7 @@ services:
       retries: 12
     restart: unless-stopped
     networks:
-      - default
+      - backend
       - container-dmz
     labels:
       - "traefik.enable=true"
@@ -89,5 +95,7 @@ services:
       - "traefik.http.services.fleet.loadbalancer.server.port=1337"
 
 networks:
+  backend:
+    internal: true
   container-dmz:
     external: true
