@@ -1,0 +1,65 @@
+---
+services:
+  mediawiki:
+    image: docker.io/library/mediawiki:stable
+    labels:
+      traefik.enable: true
+      traefik.http.routers.fitchipedia.rule: Host(`fitchipedia.apps.campcomputer.com`)
+      traefik.http.routers.fitchipedia.tls.certresolver: namecheap
+    volumes:
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php:ro
+      - ./htaccess:/var/www/html/.htaccess:ro
+      - /opt/CampFitch/Fitchipedia/images:/var/www/html/images:rw
+      - /opt/CampFitch/Fitchipedia/extensions/MultiBoilerplate:/var/www/html/extensions/MultiBoilerplate:ro
+      - /opt/CampFitch/Fitchipedia/extensions/PortableInfobox:/var/www/html/extensions/PortableInfobox:ro
+      - /opt/CampFitch/Fitchipedia/extensions/PageImages:/var/www/html/extensions/PageImages:ro
+      - /opt/CampFitch/Fitchipedia/extensions/MobileFrontend:/var/www/html/extensions/MobileFrontend:ro
+      - ./fitchipedia-php.ini:/usr/local/etc/php/conf.d/fitchipedia-php.ini:ro
+      - ./robots.txt:/var/www/html/robots.txt:ro
+    networks:
+      - fitchipedia
+      - container-dmz
+    depends_on:
+      - database
+    env_file:
+      - /opt/CampFitch/secrets/fitchipedia.env
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    restart: always
+
+  database:
+    image: docker.io/library/mariadb:10.5
+    volumes:
+      - fitchipedia_database:/var/lib/mysql
+    env_file:
+      - /opt/CampFitch/secrets/fitchipedia.env
+    networks:
+      - fitchipedia
+    restart: always
+
+  backups:
+    image: docker.io/databack/mysql-backup:1.4.0
+    command: dump
+    restart: always
+    depends_on:
+      - database
+    volumes:
+      - fitchipedia_backups:/db
+    env_file:
+      - /opt/CampFitch/secrets/fitchipedia.env
+    networks:
+      - fitchipedia
+
+volumes:
+  fitchipedia_database:
+    external: true
+  fitchipedia_backups:
+    external: true
+
+networks:
+  container-dmz:
+    external: true
+  fitchipedia:
+    external: false
