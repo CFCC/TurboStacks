@@ -19,21 +19,19 @@ services:
     volumes:
       - /mnt:/data:ro
       - ./nginx:/etc/nginx/conf.d:ro
-    ports:
-      - 10.0.0.175:80:80
-      - 10.0.0.175:443:443
     networks:
       - container-dmz
-    secrets:
-      - wildcard_cert
-      - wildcard_key
+    labels:
+      traefik.enable: true
+      traefik.http.routers.homie.rule: Host(`homie.lab.campcomputer.com`)
+      traefik.http.routers.homie.tls.certresolver: namecheap
+      traefik.http.routers.homie-http.entrypoints: http
+      traefik.http.routers.homie-http.rule: Host(`homie.lab.campcomputer.com`)
+      traefik.http.services.homie.loadbalancer.server.port: 80
+
 networks:
   container-dmz:
     external: true
 volumes:
   samba-data:
-secrets:
-  wildcard_cert:
-    file: /opt/CampFitch/secrets/wildcard_cert
-  wildcard_key:
-    file: /opt/CampFitch/secrets/wildcard_key
+  caddy-data:

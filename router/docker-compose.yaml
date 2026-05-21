@@ -5,6 +5,8 @@ services:
     ports:
       - 10.0.0.10:80:80
       - 10.0.0.10:443:443
+      - 10.0.0.175:80:80
+      - 10.0.0.175:443:443
     volumes:
       - ./traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock
@@ -17,6 +19,15 @@ services:
       - "host.docker.internal:172.17.0.1"
     env_file:
       - /opt/CampFitch/secrets/router.env
+
+  cloudflare:
+    image: docker.io/cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    env_file:
+      - /opt/CampFitch/secrets/router.env
+    restart: always
+    networks:
+      - container-dmz
 
 networks:
   container-dmz:

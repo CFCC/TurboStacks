@@ -15,11 +15,11 @@ api:
 entryPoints:
   http:
     address: ":80"
-    http:
-      redirections:
-        entryPoint:
-          to: ':443'
-          scheme: https
+#    http:
+#      redirections:
+#        entryPoint:
+#          to: ':443'
+#          scheme: https
   https:
     address: ":443"
     http:
