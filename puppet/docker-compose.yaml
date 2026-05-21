@@ -1,0 +1,35 @@
+---
+services:
+  server:
+    image: ghcr.io/openvoxproject/openvoxserver:8.8.0-latest
+    hostname: puppet.apps.campcomputer.com
+    volumes:
+      - /mnt/PuppetFS:/mnt/PuppetFS:ro
+      - ./config/puppet.conf:/etc/puppetlabs/puppet/puppet.conf:rw
+      - ./config/fileserver.conf:/etc/puppetlabs/puppet/fileserver.conf:rw
+      - ./config/auth.conf:/etc/puppetlabs/puppetserver/conf.d/auth.conf:rw
+      - ssl:/etc/puppetlabs/puppet/ssl
+      - data:/opt/puppetlabs/server/data/puppetserver
+    networks:
+      - container-dmz
+    restart: always
+    environment:
+      OPENVOXSERVER_HOSTNAME: puppet.apps.campcomputer.com
+      # Disable OpenVoxDB — this server doesn't compile catalogs
+      USE_OPENVOXDB: "false"
+      OPENVOX_STORECONFIGS: "false"
+      OPENVOX_REPORTS: "log"
+    labels:
+      traefik.enable: true
+      traefik.http.routers.puppet.rule: Host(`puppet.apps.campcomputer.com`)
+      traefik.http.routers.puppet.tls.certresolver: namecheap
+      traefik.http.services.puppet.loadbalancer.server.scheme: https
+      traefik.http.services.puppet.loadbalancer.server.port: 8140
+
+networks:
+  container-dmz:
+    external: true
+
+volumes:
+  ssl:
+  data:
