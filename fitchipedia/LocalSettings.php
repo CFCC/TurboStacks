@@ -226,3 +226,18 @@ $wgTurnstileSecretKey= getenv( 'CF_SECRET_KEY' ) ?: '';
 
 # Search the fitchipedia namespace as well as the main namespace.
 $wgNamespacesToBeSearchedDefault[NS_PROJECT] = true;
+
+# Elasticsearch search
+wfLoadExtension( 'Elastica' );
+wfLoadExtension( 'CirrusSearch' );
+
+$wgSearchType = 'CirrusSearch';
+$wgCirrusSearchServers = [ 'opensearch' ];
+$wgCirrusSearchUseCompletionSuggester = 'yes';
+$wgCirrusSearchCompletionSuggesterSubphrases = [
+    'build' => true,
+    'use' => true,
+    'type' => 'anywords',
+    'limit' => 10,
+];
+$wgCirrusSearchCompletionSettings = 'fuzzy-subphrases';

@@ -1,7 +1,7 @@
 ---
 services:
   mediawiki:
-    image: docker.io/library/mediawiki:stable
+    image: docker.io/library/mediawiki:1.45.3
     labels:
       traefik.enable: true
       traefik.http.routers.fitchipedia.rule: Host(`fitchipedia.apps.campcomputer.com`)
@@ -14,6 +14,8 @@ services:
       - /opt/CampFitch/Fitchipedia/extensions/PortableInfobox:/var/www/html/extensions/PortableInfobox:ro
       - /opt/CampFitch/Fitchipedia/extensions/PageImages:/var/www/html/extensions/PageImages:ro
       - /opt/CampFitch/Fitchipedia/extensions/MobileFrontend:/var/www/html/extensions/MobileFrontend:ro
+      - /opt/CampFitch/Fitchipedia/extensions/Elastica:/var/www/html/extensions/Elastica:ro
+      - /opt/CampFitch/Fitchipedia/extensions/CirrusSearch:/var/www/html/extensions/CirrusSearch:ro
       - ./fitchipedia-php.ini:/usr/local/etc/php/conf.d/fitchipedia-php.ini:ro
       - ./robots.txt:/var/www/html/robots.txt:ro
     networks:
@@ -21,12 +23,67 @@ services:
       - container-dmz
     depends_on:
       - database
+      - opensearch
     env_file:
       - /opt/CampFitch/secrets/fitchipedia.env
     deploy:
       resources:
         limits:
           memory: 2048M
+    restart: always
+
+  jobs:
+    image: docker.io/library/mediawiki:1.45.3
+    command: php maintenance/run.php runJobs --wait
+    volumes:
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php:ro
+      - ./htaccess:/var/www/html/.htaccess:ro
+      - /opt/CampFitch/Fitchipedia/images:/var/www/html/images:rw
+      - /opt/CampFitch/Fitchipedia/extensions/MultiBoilerplate:/var/www/html/extensions/MultiBoilerplate:ro
+      - /opt/CampFitch/Fitchipedia/extensions/PortableInfobox:/var/www/html/extensions/PortableInfobox:ro
+      - /opt/CampFitch/Fitchipedia/extensions/PageImages:/var/www/html/extensions/PageImages:ro
+      - /opt/CampFitch/Fitchipedia/extensions/MobileFrontend:/var/www/html/extensions/MobileFrontend:ro
+      - /opt/CampFitch/Fitchipedia/extensions/Elastica:/var/www/html/extensions/Elastica:ro
+      - /opt/CampFitch/Fitchipedia/extensions/CirrusSearch:/var/www/html/extensions/CirrusSearch:ro
+      - ./fitchipedia-php.ini:/usr/local/etc/php/conf.d/fitchipedia-php.ini:ro
+      - ./robots.txt:/var/www/html/robots.txt:ro
+    networks:
+      - fitchipedia
+      - container-dmz
+    depends_on:
+      - database
+      - opensearch
+    env_file:
+      - /opt/CampFitch/secrets/fitchipedia.env
+    restart: always
+
+  cron:
+    image: docker.io/library/mediawiki:1.45.3
+    command: >
+      bash -c "while true; do
+        php maintenance/run.php CirrusSearch:UpdateSuggesterIndex;
+        sleep 3600;
+      done"
+    volumes:
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php:ro
+      - ./htaccess:/var/www/html/.htaccess:ro
+      - /opt/CampFitch/Fitchipedia/images:/var/www/html/images:rw
+      - /opt/CampFitch/Fitchipedia/extensions/MultiBoilerplate:/var/www/html/extensions/MultiBoilerplate:ro
+      - /opt/CampFitch/Fitchipedia/extensions/PortableInfobox:/var/www/html/extensions/PortableInfobox:ro
+      - /opt/CampFitch/Fitchipedia/extensions/PageImages:/var/www/html/extensions/PageImages:ro
+      - /opt/CampFitch/Fitchipedia/extensions/MobileFrontend:/var/www/html/extensions/MobileFrontend:ro
+      - /opt/CampFitch/Fitchipedia/extensions/Elastica:/var/www/html/extensions/Elastica:ro
+      - /opt/CampFitch/Fitchipedia/extensions/CirrusSearch:/var/www/html/extensions/CirrusSearch:ro
+      - ./fitchipedia-php.ini:/usr/local/etc/php/conf.d/fitchipedia-php.ini:ro
+      - ./robots.txt:/var/www/html/robots.txt:ro
+    networks:
+      - fitchipedia
+      - container-dmz
+    depends_on:
+      - database
+      - opensearch
+    env_file:
+      - /opt/CampFitch/secrets/fitchipedia.env
     restart: always
 
   database:
@@ -52,11 +109,25 @@ services:
     networks:
       - fitchipedia
 
+  opensearch:
+    #image: docker.io/library/elasticsearch:7.10.1
+    image: docker.io/opensearchproject/opensearch:1.3.9
+    environment:
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true  # simplifies setup for local/internal use
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data:rw
+    networks:
+      - fitchipedia
+    restart: always
+
 volumes:
   fitchipedia_database:
     external: true
   fitchipedia_backups:
     external: true
+  opensearch_data:
 
 networks:
   container-dmz:

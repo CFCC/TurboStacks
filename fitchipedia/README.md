@@ -21,3 +21,11 @@ Clear bogus users:
 ```
 dc exec mediawiki php maintenance/run.php removeUnusedAccounts.php --ignore-touched 0 [--delete]
 ```
+
+Reindex
+```
+dc exec mediawiki php maintenance/run.php CirrusSearch:UpdateSearchIndexConfig --reindexAndRemoveOk
+dc exec mediawiki php maintenance/run.php CirrusSearch:ForceSearchIndex --skipLinks --indexOnSkip
+dc exec mediawiki php maintenance/run.php CirrusSearch:ForceSearchIndex --skipParse
+dc exec mediawiki php maintenance/run.php CirrusSearch:UpdateSuggesterIndex
+```
