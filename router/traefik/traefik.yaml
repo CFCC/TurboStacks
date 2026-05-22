@@ -15,6 +15,7 @@ api:
 entryPoints:
   http:
     address: ":80"
+# disabled until we are sure that kickstart works
 #    http:
 #      redirections:
 #        entryPoint:
@@ -22,6 +23,11 @@ entryPoints:
 #          scheme: https
   https:
     address: ":443"
+    http:
+      tls: true
+  # Easier than to teach every puppet client about our "weird" port of 443 above.
+  puppet:
+    address: ":8140"
     http:
       tls: true
 
