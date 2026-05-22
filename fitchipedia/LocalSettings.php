@@ -230,7 +230,6 @@ $wgNamespacesToBeSearchedDefault[NS_PROJECT] = true;
 # Elasticsearch search
 wfLoadExtension( 'Elastica' );
 wfLoadExtension( 'CirrusSearch' );
-
 $wgSearchType = 'CirrusSearch';
 $wgCirrusSearchServers = [ 'opensearch' ];
 $wgCirrusSearchUseCompletionSuggester = 'yes';
@@ -241,3 +240,7 @@ $wgCirrusSearchCompletionSuggesterSubphrases = [
     'limit' => 10,
 ];
 $wgCirrusSearchCompletionSettings = 'fuzzy-subphrases';
+
+# Prevent pages ending in periods
+wfLoadExtension( 'TitleBlacklist' );
+$wgGroupPermissions['sysop']['tboverride'] = false;
