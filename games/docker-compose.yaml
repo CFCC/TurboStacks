@@ -9,6 +9,8 @@ services:
       - ./quake3/server.cfg:/usr/share/games/quake3/baseq3/server.cfg
 
   tf2:
+    # Don't use latest-x64
+    # https://github.com/ValveSoftware/Source-1-Games/issues/5885
     image: docker.io/cm2network/tf2:latest
     restart: always
     # host requires firewall-cmd
