@@ -103,7 +103,7 @@ services:
     depends_on:
       - database
     volumes:
-      - fitchipedia_backups:/db
+      - /opt/CampFitch/backups/fitchipedia/:/db:rw
     env_file:
       - /opt/CampFitch/secrets/fitchipedia.env
     networks:
@@ -124,8 +124,6 @@ services:
 
 volumes:
   fitchipedia_database:
-    external: true
-  fitchipedia_backups:
     external: true
   opensearch_data:
 
