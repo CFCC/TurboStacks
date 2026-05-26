@@ -9,7 +9,7 @@ services:
       - ./quake3/server.cfg:/usr/share/games/quake3/baseq3/server.cfg
 
   tf2:
-    image: docker.io/cm2network/tf2:latest-x64
+    image: docker.io/cm2network/tf2:latest
     restart: always
     # host requires firewall-cmd
     network_mode: host
