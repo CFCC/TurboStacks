@@ -184,6 +184,7 @@ wfLoadExtension( 'Cite' );
 wfLoadExtension( 'Linter' );
 wfLoadExtension( 'DiscussionTools' );
 wfLoadExtension( 'MobileFrontend' );
+wfLoadExtension( 'DynamicPageList4' );
 
 
 

@@ -16,6 +16,7 @@ services:
       - /opt/CampFitch/Fitchipedia/extensions/MobileFrontend:/var/www/html/extensions/MobileFrontend:ro
       - /opt/CampFitch/Fitchipedia/extensions/Elastica:/var/www/html/extensions/Elastica:ro
       - /opt/CampFitch/Fitchipedia/extensions/CirrusSearch:/var/www/html/extensions/CirrusSearch:ro
+      - /opt/CampFitch/Fitchipedia/extensions/DynamicPageList4:/var/www/html/extensions/DynamicPageList4:ro
       - ./fitchipedia-php.ini:/usr/local/etc/php/conf.d/fitchipedia-php.ini:ro
       - ./robots.txt:/var/www/html/robots.txt:ro
     networks:
@@ -45,6 +46,7 @@ services:
       - /opt/CampFitch/Fitchipedia/extensions/MobileFrontend:/var/www/html/extensions/MobileFrontend:ro
       - /opt/CampFitch/Fitchipedia/extensions/Elastica:/var/www/html/extensions/Elastica:ro
       - /opt/CampFitch/Fitchipedia/extensions/CirrusSearch:/var/www/html/extensions/CirrusSearch:ro
+      - /opt/CampFitch/Fitchipedia/extensions/DynamicPageList4:/var/www/html/extensions/DynamicPageList4:ro
       - ./fitchipedia-php.ini:/usr/local/etc/php/conf.d/fitchipedia-php.ini:ro
       - ./robots.txt:/var/www/html/robots.txt:ro
     networks:
@@ -74,6 +76,7 @@ services:
       - /opt/CampFitch/Fitchipedia/extensions/MobileFrontend:/var/www/html/extensions/MobileFrontend:ro
       - /opt/CampFitch/Fitchipedia/extensions/Elastica:/var/www/html/extensions/Elastica:ro
       - /opt/CampFitch/Fitchipedia/extensions/CirrusSearch:/var/www/html/extensions/CirrusSearch:ro
+      - /opt/CampFitch/Fitchipedia/extensions/DynamicPageList4:/var/www/html/extensions/DynamicPageList4:ro
       - ./fitchipedia-php.ini:/usr/local/etc/php/conf.d/fitchipedia-php.ini:ro
       - ./robots.txt:/var/www/html/robots.txt:ro
     networks:
