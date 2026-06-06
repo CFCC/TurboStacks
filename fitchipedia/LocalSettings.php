@@ -185,7 +185,8 @@ wfLoadExtension( 'Linter' );
 wfLoadExtension( 'DiscussionTools' );
 wfLoadExtension( 'MobileFrontend' );
 wfLoadExtension( 'DynamicPageList4' );
-
+wfLoadExtension( 'Purge' );
+wfLoadExtension( 'Poem' );
 
 
 # End of automatically generated settings.
