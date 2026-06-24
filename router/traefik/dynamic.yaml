@@ -16,3 +16,11 @@ http:
     dashboard:
       rule: Host(`traefik.apps.campcomputer.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
       service: api@internal
+    octoprint:
+      rule: Host(`octoprint.apps.campcomputer.com`)
+      service: octoprint@file
+  services:
+    octoprint:
+      loadbalancer:
+        servers:
+          - url: "http://10.0.0.118:5000"
